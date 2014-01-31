@@ -1,4 +1,4 @@
-class WhateverResponse:
+class WhateverResponse(object):
   @staticmethod
   def answers(message):
     return True
@@ -7,7 +7,7 @@ class WhateverResponse:
   def response():
     return 'Whatever.'
 
-class ShoutResponse:
+class ShoutResponse(object):
   @staticmethod
   def answers(message):
     return message == message.upper()
@@ -16,7 +16,7 @@ class ShoutResponse:
   def response():
     return 'Woah, chill out!'
 
-class QuestionResponse:
+class QuestionResponse(object):
   @staticmethod
   def answers(message):
     return message.endswith('?')
@@ -25,7 +25,7 @@ class QuestionResponse:
   def response():
     return 'Sure.'
 
-class SilenceResponse:
+class SilenceResponse(object):
   @staticmethod
   def answers(message):
     return (message or '').strip() == ''
@@ -34,12 +34,14 @@ class SilenceResponse:
   def response():
     return 'Fine. Be that way!'
 
-class Responder:
+class Responder(object):
   responders = [SilenceResponse, ShoutResponse, QuestionResponse, WhateverResponse]
 
   def respond_to(self, message):
-    return next(r for r in self.responders if r.answers(message)).response()
+    for responder in self.responders:
+      if responder.answers(message):
+        return responder.response()
 
-class Bob:
+class Bob(object):
   def hey(self, message, responder=Responder()):
     return responder.respond_to(message)
